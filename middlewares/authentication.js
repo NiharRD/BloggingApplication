@@ -6,14 +6,18 @@ function checkForAuthenticationCookie(cookieName) {
   return (req, res, next) => {
     // this type of function for sending requests
     const tokenCookieValue = req.cookies[cookieName];
+    console.log("Token from cookie:", tokenCookieValue);
     if (!tokenCookieValue) {
-      next();
+      return next();
     }
     try {
-      const userPayLoad = validateToken(validateToken);
+      const userPayLoad = validateToken(tokenCookieValue); // Fixed: was validateToken(validateToken)
+      console.log("User payload:", userPayLoad);
       req.user = userPayLoad;
-    } catch (error) {}
-    next();
+    } catch (error) {
+      console.log("Token validation error:", error);
+    }
+    return next();
   };
 }
 

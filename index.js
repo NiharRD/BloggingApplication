@@ -15,11 +15,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieparser());
 app.use(checkForAuthenticationCookie("token"));
 
-app.get("/", (req, res) =>
+app.get("/", (req, res) => {
+  console.log("req.user in home route:", req.user);
   res.render("home", {
     user: req.user,
-  })
-);
+  });
+});
 app.use("/user", userRouter);
 const PORT = 8000;
 
