@@ -17,10 +17,10 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
+        <% if (locals.user) { %>
         <li class="nav-item">
           <a class="nav-link" href="#">Add Blog</a>
         </li>
-
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -35,7 +35,21 @@
             <li><a class="dropdown-item" href="#">LogOut</a></li>
           </ul>
         </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/signup"> CreateAccount </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/signin"> SignIn </a>
+        </li>
+        <% } %>
       </ul>
     </div>
   </div>
 </nav>
+
+<% if (locals.error) { %>
+<div class="wrong">
+  <div class="alert alert-danger" role="alert">Incorrect credencials</div>
+</div>
+<% } %>

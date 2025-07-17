@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const {
+  createTokenForUser,
+  validateToken,
+} = require("../services/authentication");
 const { createHmac, randomBytes } = require("crypto"); // import for cryptoGraphy
 const userSchema = mongoose.Schema(
   {
@@ -33,22 +37,26 @@ const userSchema = mongoose.Schema(
   { timeStamps: true }
 );
 
-userSchema.static("matchPassword", async function (email, password) {
-  const user = await this.findOne({ email });
+userSchema.static(
+  "matchPasswordAndGenerateToken",
+  async function (email, password) {
+    const user = await this.findOne({ email });
 
-  if (!user) throw new Error("User not found");
+    if (!user) throw new Error("User not found");
 
-  const salt = user.salt;
-  const hashedPassword = user.password;
-  const userProvidedHash = createHmac("sha256", salt)
-    .update(password)
+    const salt = user.salt;
+    const hashedPassword = user.password;
+    const userProvidedHash = createHmac("sha256", salt)
+      .update(password)
 
-    .digest("hex");
-  if (hashedPassword !== userProvidedHash)
-    throw new Error("Incorrect password");
-  if (hashedPassword === userProvidedHash) console.log("password matched");
-  return user;
-});
+      .digest("hex");
+    if (hashedPassword !== userProvidedHash)
+      throw new Error("Incorrect password");
+    if (hashedPassword === userProvidedHash) console.log("password matched");
+    const token = createTokenForUser(user);
+    return token;
+  }
+);
 
 userSchema.pre("save", function (next) {
   // preSave are like middle wares for mongooose
