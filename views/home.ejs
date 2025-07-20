@@ -5,7 +5,23 @@
   </head>
 
   <body>
-    <%- include("./partials/scripts") %> <%= JSON.stringify(user) %> <%-
-    include("./partials/navbar") %>
+    <%- include("./partials/scripts") %> <% if (user) { %> <%=
+    JSON.stringify(user) %> <% } else { %> No user logged in <% } %> <%-
+    include("./partials/navbar") %> <% blogs.forEach(blog => { %>
+    <div class="card" style="width: 18rem">
+      <img
+        src="/images/<%= blog.coverImageURL %>"
+        class="card-img-top"
+        alt="..."
+      />
+      <div class="card-body">
+        <h5 class="card-title"><%= blog.title %></h5>
+        <p class="card-text"><%= blog.body %></p>
+        <a href="#" class="btn btn-primary"
+          >by <%= blog.createdBy ? blog.createdBy.fullName : "Unknown" %></a
+        >
+      </div>
+    </div>
+    <% }) %>
   </body>
 </html>
